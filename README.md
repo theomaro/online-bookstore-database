@@ -1,5 +1,5 @@
 # Online Bookstore Database
-an example of an online bookstore that sells books to customers. The bookstore has multiple book categories and a large number of customers who can place orders.
+An online bookstore that sells books to customers. The bookstore has multiple book categories and number of customers who can place orders.
 
 ## Entity Relationship Model
 To model this system using ER Model must first identify the entities, attributes, and relationships that are involved.
