@@ -6,44 +6,54 @@ To model this system using ER Model must first identify the entities, attributes
 
 ### Entities and Attributes
 
-1. **Genre**: Represents an individual genre of books in the bookstore.
-    *Attributes*: id (PK), name, and description.
+1. **Author**: Represents an individual author.
+    *Attributes*: id(PK), name, and email.
 
-2. **Book**: Represents an individual book record in the bookstore. Contains attributes.
-    *Attributes*: id (PK), title, description, author, ISBN, stock_quantity, and price.
+2. **Publisher**: Represents an individual publisher.
+    *Attributes*: id(PK), name, and location.
 
-3. **Book Genre**: Represents the many-to-many relationship between books and genres.
-    *Attributes*: id (PK), bookId (FK), and genreId (FK).
+3. **Book**: Represents an individual book record in the bookstore. Contains attributes.
+    *Attributes*: id(PK), title, description, author_id(FK), publisher_id(FK), published_year, ISBN, stock_quantity, and price.
 
-4. **Customer**: Represents an individual customer record who has registered with the bookstore.
-    *Attributes*: id (PK), name, date of birth, sex, phone number, address, and email.
+4. **Genre**: Represents an individual genre of books in the bookstore.
+    *Attributes*: id(PK), name, and description.
 
-5. **Order**: Represents an individual order record placed by a customer.
-    *Attributes*: id (PK), order date, total price, and customerId (FK).
+5. **Book Genre**: Represents the many-to-many relationship between books and genres.
+    *Attributes*: id(PK), book_id(FK), and genre_id(FK).
 
-6. **Order Item**: Represents the many-to-many relationship between orders and books.
-    *Attributes*: id (PK), bookId (FK), and orderId (FK), unit_price, and quantity.
+6. **Customer**: Represents an individual customer record who has registered with the bookstore.
+    *Attributes*: id(PK), name, date of birth, sex, phone number, address, and email.
+
+7. **Order**: Represents an individual order record placed by a customer.
+    *Attributes*: id(PK), date_place, total_amount, shipping_address and customer_id(FK).
+
+7. **Order Item**: Represents the many-to-many relationship between orders and books.
+    *Attributes*: id(PK), book_id(FK), and order_id(FK), unit_price, and quantity.
+
+8. **Payment**: Represents payment for a specific order.
+    *Attributes*: id(PK), order_id, payment_method, status, date_paid, and amount_paid.
 
 ### Relationships
 
-1. **Many-to-Many**
-    - One book can belong to multiple genres.
-    - One order can contain multiple books
-
-2. **One-to-Many**
-    - One genre can have multiple books.
-    - One customer can place multiple orders.
-
 ## Entity Relationship Diagram (ERD)
+
+## Normalization
 
 ## The SQL Database Schema
 
 ```sql
--- Genres Table
-CREATE TABLE genres (
+-- Author Table
+CREATE TABLE authors (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- Publisher Table
+CREATE TABLE publishers (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL UNIQUE,
-    description TEXT DEFAULT NULL
+    location VARCHAR(100) NOT NULL
 );
 
 -- Books Table
@@ -51,20 +61,30 @@ CREATE TABLE books (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(100) NOT NULL UNIQUE,
     description TEXT DEFAULT NULL,
-    author VARCHAR(100) NOT NULL,
+    author_id INT NOT NULL,
+    publisher_id INT NOT NULL,
     published_year YEAR(4) NOT NULL,
-    ISBN VARCHAR(100) NOT NULL UNIQUE,
+    isbn VARCHAR(100) NOT NULL UNIQUE,
     stock_quantity INT NOT NULL DEFAULT 0,
-    price DOUBLE(11, 2) NOT NULL CHECK(price > 0)
+    price DOUBLE(11, 2) NOT NULL CHECK(price > 0),
+    FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE CASCADE,
+    FOREIGN KEY (publisher_id) REFERENCES publishers(id) ON DELETE CASCADE
 );
 
--- Book Genres Tables
-CREATE TABLE books_genres (
+-- Genres Table
+CREATE TABLE genres (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    bookId INT NOT NULL,
-    genreId INT NOT NULL,
-    FOREIGN KEY bookId REFERENCES books(id) ON DELETE CASCADE,
-    FOREIGN KEY genreId REFERENCES genres(id) ON DELETE CASCADE
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT DEFAULT NULL
+);
+
+-- Book Genre Tables
+CREATE TABLE genre_book (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    book_id INT NOT NULL,
+    genre_id INT NOT NULL,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE,
+    FOREIGN KEY (genre_id) REFERENCES genres(id) ON DELETE CASCADE
 );
 
 -- Customers Table
@@ -72,29 +92,43 @@ CREATE TABLE customers (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    phone_number VARCHAR(15) NOT NULL UNIQUE,
+    phone_number VARCHAR(20) NOT NULL UNIQUE,
     birth_date DATE DEFAULT NULL,
-    sex ENUM("F", "M"),
+    sex ENUM("female", "male"),
     address VARCHAR(100) DEFAULT NULL
 );
 
 -- Orders Table
 CREATE TABLE orders (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    customerId INT NOT NULL,
-    order_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    -- total_price DOUBLE(11, 2) NOT NULL,
-    FOREIGN KEY customerId REFERENCES customers(id) ON DELETE CASCADE
+    customer_id INT NOT NULL,
+    status ENUM("pending", "shipped", "delivered", "cancelled", "paid"),
+    date_place DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    total_amount DOUBLE(11, 2) NOT NULL,
+    shipping_address VARCHAR(100) NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+);
 
 -- Order Items Table
-CREATE TABLE order_items (
+CREATE TABLE order_item (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    bookId INT NOT NULL,
-    orderId INT NOT NULL,
+    book_id INT NOT NULL,
+    order_id INT NOT NULL,
     quantity INT NOT NULL CHECK(quantity > 0),
     unit_price DOUBLE(11, 2) NOT NULL,
-    FOREIGN KEY customerId REFERENCES customers(id) ON DELETE CASCADE,
-    FOREIGN KEY orderId REFERENCES orders(id) ON DELETE CASCADE
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+
+-- Payments Table
+CREATE TABLE payments (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    date_paid DATETIME DEFAULT CURRENT_TIMESTAMP,
+    payment_method ENUM("mobile transfer","cash", "paypal") DEFAULT "cash",
+    amount_paid DOUBLE(11, 2) NOT NULL,
+    status ENUM("pending", "successful", "failed", "cancelled", "refunded"),
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 );
 ```
     
