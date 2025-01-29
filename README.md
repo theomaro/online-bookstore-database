@@ -50,9 +50,9 @@ These relationships define a well-structured SQL database schema for efficiently
 3. **One-to-One**:
 - Each order can have one payment.
 
-## Entity Relationship Diagram (ERD)
- 
-## Normalization
+### Normalization
+
+### Entity Relationship Diagram (ERD)
 
 ## The SQL Database Schema
 
@@ -60,14 +60,14 @@ These relationships define a well-structured SQL database schema for efficiently
 -- Author Table
 CREATE TABLE authors (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(200) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE
 );
 
 -- Publisher Table
 CREATE TABLE publishers (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL UNIQUE,
+    name VARCHAR(200) NOT NULL UNIQUE,
     location VARCHAR(100) NOT NULL
 );
 
@@ -79,7 +79,7 @@ CREATE TABLE books (
     author_id INT NOT NULL,
     publisher_id INT NOT NULL,
     published_year YEAR(4) NOT NULL,
-    isbn VARCHAR(100) NOT NULL UNIQUE,
+    ISBN VARCHAR(100) NOT NULL UNIQUE,
     stock_quantity INT NOT NULL DEFAULT 0,
     price DOUBLE(11, 2) NOT NULL CHECK(price > 0),
     FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE CASCADE,
@@ -105,7 +105,7 @@ CREATE TABLE genre_book (
 -- Customers Table
 CREATE TABLE customers (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(200) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone_number VARCHAR(20) NOT NULL UNIQUE,
     birth_date DATE DEFAULT NULL,
