@@ -2,7 +2,7 @@
 An online bookstore that sells books to customers. The bookstore has multiple book categories and number of customers who can place orders.
 
 ## Entity Relationship Model
-To model this system using ER Model must first identify the entities, attributes, and relationships that are involved.
+In order to model the online bookstore system using ER Model, first I identify the entities, attributes, and relationships that are involved.
 
 ### Entities and Attributes
 
@@ -27,34 +27,31 @@ To model this system using ER Model must first identify the entities, attributes
 7. **Order**: Represents an individual order record placed by a customer.
     *Attributes*: id(PK), date_place, total_amount, shipping_address and customer_id(FK).
 
-7. **Order Item**: Represents the many-to-many relationship between orders and books.
+8. **Order Item**: Represents the many-to-many relationship between orders and books.
     *Attributes*: id(PK), book_id(FK), and order_id(FK), unit_price, and quantity.
 
-8. **Payment**: Represents payment for a specific order.
+9. **Payment**: Represents payment for a specific order.
     *Attributes*: id(PK), order_id, payment_method, status, date_paid, and amount_paid.
 
 ### Relationships
-
 These relationships define a well-structured SQL database schema for efficiently managing online bookstore
 
 1. **One-to-Many**:
-- One author can write multiple books.
-- One publisher can publish multiple books.
-- One customer can place multiple orders.
-- One order can have multiple order items
-- One book can appear in multiple order items
+   - One author can write multiple books.
+   - One publisher can publish multiple books.
+   - One customer can place multiple orders.
+   - One order can have multiple order items
+   - One book can appear in multiple order items
 
 2. **Many-to-Many**:
-- A book can belong to multiple genres, and a genre can have multiple books. This relationship is established through the join table genre_books.
+   - A book can belong to multiple genres, and a genre can have multiple books. This relationship is established through the join table genre_books.
 
 3. **One-to-One**:
-- Each order can have one payment.
+   - Each order can have one payment.
 
 ### Entity Relationship Diagram (ERD)
 
-![Bookstore ER Diagram](./bookstores-erd.png)
-
-### Normalization
+   ![Bookstore ER Diagram](./bookstores-erd.png)
 
 ## The SQL Database Schema
 
@@ -148,4 +145,3 @@ CREATE TABLE payments (
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 );
 ```
-    
