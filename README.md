@@ -35,8 +35,23 @@ To model this system using ER Model must first identify the entities, attributes
 
 ### Relationships
 
-## Entity Relationship Diagram (ERD)
+These relationships define a well-structured SQL database schema for efficiently managing online bookstore
 
+1. **One-to-Many**:
+- One author can write multiple books.
+- One publisher can publish multiple books.
+- One customer can place multiple orders.
+- One order can have multiple order items
+- One book can appear in multiple order items
+
+2. **Many-to-Many**:
+- A book can belong to multiple genres, and a genre can have multiple books. This relationship is established through the join table genre_books.
+
+3. **One-to-One**:
+- Each order can have one payment.
+
+## Entity Relationship Diagram (ERD)
+ 
 ## Normalization
 
 ## The SQL Database Schema
