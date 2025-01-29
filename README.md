@@ -50,11 +50,11 @@ These relationships define a well-structured SQL database schema for efficiently
 3. **One-to-One**:
 - Each order can have one payment.
 
-### Normalization
-
 ### Entity Relationship Diagram (ERD)
 
-!(./bookstores-erd.png)
+![Bookstore ER Diagram](./bookstores-erd.png)
+
+### Normalization
 
 ## The SQL Database Schema
 
