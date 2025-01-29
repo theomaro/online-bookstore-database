@@ -54,6 +54,8 @@ These relationships define a well-structured SQL database schema for efficiently
 
 ### Entity Relationship Diagram (ERD)
 
+!(./bookstores-erd.png)
+
 ## The SQL Database Schema
 
 ```sql
