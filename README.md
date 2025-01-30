@@ -156,4 +156,43 @@ CREATE TABLE payments (
     status ENUM("pending", "successful", "failed", "cancelled", "refunded"),
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 );
+
+-- Shopping Cart
+CREATE TABLE shopping_cart (
+    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    customer_id INT NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+
+-- Cart Item
+CREATE TABLE cart_item (
+    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    cart_id INT NOT NULL,
+    book_id INT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (cart_id) REFERENCES ShoppingCart(id),
+    FOREIGN KEY (book_id) REFERENCES books(id)
+);
+
+-- Customer Addresses
+CREATE TABLE customer_Addresses (
+    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    customer_id INT NOT NULL,
+    region VARCHAR(100) NOT NULL,
+    district VARCHAR(100) NOT NULL,
+    zip_code VARCHAR(10) NOT NULL,
+    is_default BOOL NOT NULL DEFAULT "false",
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+
+-- Discounts
+CREATE TABLE discounts (
+    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    discount_code VARCHAR(10) NOT NULL UNIQUE,
+    discount_type ENUM ("percentage","fixed amount") NOT NULL DEFAULT "percentage",
+    discount_value INT NOT NULL,
+    start_date DATETIME NOT NULL,
+    end_date DATETIME NOT NULL,
+    min_order_amount INT NOT NULL DEFAULT 50000
+);
 ```
