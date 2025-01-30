@@ -33,6 +33,15 @@ In order to model the online bookstore system using ER Model, first I identify t
 9. **Payment**: Represents payment for a specific order.
     *Attributes*: id(PK), order_id, payment_method, status, date_paid, and amount_paid.
 
+10. **ShoppingCart**: Allow customers to temporarily add books to a shopping cart before finalizing their purchase.
+    *Attributes*: cart_id(PK), and customer_id(FK) 
+
+11. **CartItems**: Represents individual item in a shopping cart.
+    *Attributes*: id(PK), cart_id(FK), book_id(FK), and quantity 
+
+12. **CustomerAddresses**: Allow customers to save multiple addresses for shipping convenience.
+    *Attributes*: id(PK), customer_id(FK), region, district, zip_code, and is_default
+
 ### Relationships
 These relationships define a well-structured SQL database schema for efficiently managing online bookstore
 
