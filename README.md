@@ -42,6 +42,9 @@ In order to model the online bookstore system using ER Model, first I identify t
 12. **CustomerAddresses**: Allow customers to save multiple addresses for shipping convenience.
     *Attributes*: id(PK), customer_id(FK), region, district, zip_code, and is_default
 
+13. **Discounts**: Allow the implementation of promotional campaigns (e.g., discount codes) to boost sales.
+    **Attributes**: id(PK), discount_code, discount_type, discount_value, start_date, end_date, and min_order_amount.
+
 ### Relationships
 These relationships define a well-structured SQL database schema for efficiently managing online bookstore
 
